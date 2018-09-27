@@ -589,9 +589,12 @@ static void nn_ctcp_start_connecting (struct nn_ctcp *self,
     remotelen = sslen;
     if (remote.ss_family == AF_INET)
         ((struct sockaddr_in*) &remote)->sin_port = htons (port);
-    else if (remote.ss_family == AF_INET6)
+    else if (remote.ss_family == AF_INET6) {
         ((struct sockaddr_in6*) &remote)->sin6_port = htons (port);
-    else
+        ((struct sockaddr_in6*) &remote)->sin6_flowinfo = 0;
+        ((struct sockaddr_in6*) &remote)->sin6_scope_id =
+		((struct sockaddr_in6*)&local)->sin6_scope_id;
+    } else
         nn_assert (0);
 
     /*  Try to start the underlying socket. */
