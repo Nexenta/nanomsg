@@ -370,6 +370,11 @@ int nn_create_socket (nn_options_t *options)
         nn_assert_errno (rc == 0, "Can't set socket name");
     }
 
+    /* set the option so we can use ipv6 address */
+    int flag = 0;
+    rc = nn_setsockopt(sock, NN_SOL_SOCKET , NN_IPV4ONLY, &flag, sizeof(int));
+    nn_assert_errno (rc == 0, "Can't reset ipv4 only");
+
     /* Specific initialization */
     switch (options->socket_type) {
     case NN_SUB:
